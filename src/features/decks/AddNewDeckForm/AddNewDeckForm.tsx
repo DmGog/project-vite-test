@@ -1,5 +1,7 @@
 import s from './AddNewPostForm.module.css'
 import { useForm } from 'react-hook-form'
+import { useAppDispatch } from '../../../app/store.ts'
+import { createDeckTC } from '../decks-thunks.ts'
 
 type FormValues = {
   name: string
@@ -8,6 +10,7 @@ type FormValues = {
 export const AddNewDeckForm = () => {
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
@@ -16,8 +19,14 @@ export const AddNewDeckForm = () => {
     },
   })
 
+  const dispatch = useAppDispatch()
+
   const onSubmit = (data: FormValues) => {
-    console.log(data)
+    dispatch(createDeckTC(data)).then(() => {
+      reset()
+    }).catch(() => {
+      alert('количество символов больше 30')
+    })
   }
 
   return (
